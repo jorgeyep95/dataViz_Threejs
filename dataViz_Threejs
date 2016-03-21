@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset=utf-8>
+	<title>My second Three.js app</title>
+	<style>
+		body { margin: 0; }
+		canvas { width: 100%; height: 100% }
+	</style>
+</head>
+<body>
+	<script src="js/three.min.js"></script>
+	<script src="js/OrbitControls.js"></script>
+	<script src="js/p5.min.js"></script>
+	<script>
+
+var parent1,parent2,parent3,parent4,scene,camera,renderer,container;
+var sizeW= window.innerWidth;
+var sizeH= window.innerHeight;
+var mesh1=[];
+var mesh2=[];
+var mesh3=[];
+var mesh4=[];
+var pivot1= [];
+var pivot2= [];
+var pivot3=[];
+var pivot4=[];
+var radio;
+var colores = [
+  0x065143,
+  0x2ebe62,
+  0x00a878,
+  0x7dc95e,
+  0xbef2b3,
+];
+var datos =[
+0.1,
+0.5,
+10,
+34,
+2,
+1.5,
+3.45,
+5.2,
+7,
+];
+var materiales;
+var materiales1;
+
+init();
+animate();
+
+function init(){
+
+//container//
+	container= document.createElement('div');
+	document.body.appendChild(container);
+
+//renderer//
+	renderer= new THREE.WebGLRenderer();
+	renderer.setSize(sizeW,sizeH);
+	document.body.appendChild(renderer.domElement);
+
+//scene//
+	scene= new THREE.Scene();
+
+//camera//
+	camera= new THREE.PerspectiveCamera(40,sizeW/sizeH,0.1,100);
+	camera.position.set(0,0,45);
+
+//geometry//
+	var geometry1= new THREE.BoxGeometry(0.2,0.5,1);
+	var geometry2= new THREE.BoxGeometry(0.1,1,1);
+	radio=0.1;
+	var geometry3= new THREE.SphereGeometry(0.1,9,9);
+	
+
+//torus//
+	var torusGeom= new THREE.TorusGeometry(7,0.1,4,57,6.3);
+	var torusMat= new THREE.MeshLambertMaterial({color:0xe6ffe6});
+	var torusMesh= new THREE.Mesh(torusGeom,torusMat);
+	scene.add(torusMesh);
+
+//lights//
+	var light = new THREE.PointLight(  0xe6ffe6, 10, 100 );
+	light.position.set( 50, 50, 50 );
+	scene.add( light );
+	
+//material//
+
+	// materiales[i]= new THREE.MeshLambertMaterial({color:colores[Math.floor(Math.random() * colores.length)]});
+	// materiales[i]= new THREE.MeshLambertMaterial({color:colores[Math.floor(Math.random()*colores.length)]});
+	// materiales1[i]= new THREE.MeshLambertMaterial({color:colores[Math.floor(Math.random()*colores.length)]});
+	materiales=new THREE.MeshLambertMaterial({color:0x003300});
+	materiales1= new THREE.MeshLambertMaterial({color:0x33cc33})
+
+//controls//
+	controls= new THREE.OrbitControls(camera);
+	controls.minDistance=10;
+	controls.maxDistance=50;
+
+//axes//
+	// var axes= new THREE.AxisHelper(20);
+	// scene.add(axes);
+
+//parent//
+
+	parent1= new THREE.Object3D();
+	parent2= new THREE.Object3D();
+	parent3= new THREE.Object3D();
+	parent4= new THREE.Object3D();
+
+	scene.add(parent1);
+	scene.add(parent2);
+	scene.add(parent3);
+	scene.add(parent4);
+
+//pivots//
+
+for(var i=0;i<31;i++){
+	pivot1[i]= new THREE.Object3D();
+	pivot1[i].rotation.z= i*0.2;
+	pivot1[i].position.z= 1;
+	parent1.add(pivot1[i]);
+
+	pivot2[i]= new THREE.Object3D();
+	pivot2[i].rotation.z=i*0.2;
+	parent2.add(pivot2[i]);
+
+	pivot3[i]= new THREE.Object3D();
+	pivot3[i].rotation.z=i*0.2;
+	parent3.add(pivot3[i]);
+
+	pivot4[i]= new THREE.Object3D();
+	pivot4[i].rotation.z=i*0.2;
+	parent4.add(pivot4[i]);
+	
+}
+//mesh//
+for(var i=0;i<31;i++){
+	
+	mesh1[i]= new THREE.Mesh(geometry1,materiales);
+	mesh1[i].position.y=5;
+	//mesh1[i].rotation.z=45;
+	pivot1[i].add(mesh1[i]);
+
+	mesh2[i]= new THREE.Mesh(geometry2,materiales1);
+	mesh2[i].position.y=6;
+	pivot2[i].add(mesh2[i]);
+
+	mesh3[i]= new THREE.Mesh(geometry2,materiales);
+	mesh3[i].position.y=2;
+	mesh3[i].position.z=2;
+	pivot3[i].add(mesh3[i]);
+
+	mesh4[i]= new THREE.Mesh(geometry3,materiales1);
+	mesh4[i].position.y=3.6;
+	mesh4[i].position.z=1.8
+	pivot4[i].add(mesh4[i]);
+}
+}
+
+function animate(){
+	requestAnimationFrame(animate);
+	controls.update();
+	girar();
+	renderer.render(scene,camera);
+}
+
+function girar(){
+	
+	for(var i=0; i<31;i++){
+		mesh3[i].rotation.x+=0.007;
+		mesh2[i].rotation.x+=0.007;
+		mesh1[i].rotation.x-=0.008;
+		mesh1[i].rotation.z-=0.009;
+		
+	}
+	
+}
+
+	</script>
+</body>
+</html>
